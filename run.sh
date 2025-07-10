@@ -1,53 +1,16 @@
-#!/bin/bash
-
-VERBOSE=1
-
-for var in "$@"
-do
-  case $var in
-    -v | --verbose)
-      VERBOSE=0
-      ;;
-  esac
-
-done
-
-# Mettre un switch case ?
-
-if [ ! -d build/ ]; then
-	if [ $VERBOSE -eq 0 ]; then
-		echo "Directory build doesn't exists"
-	fi
-	exit
+if [ ! -d bin/ ]; then 
+    echo "Error : no bin found, please run build.sh first"
+    exit -1
 fi
 
-cd build
+cd bin
 
-if [ $VERBOSE -eq 0 ]; then
- 	echo "Going into build"
- fi
-
-command -v cmake
-
-if [ $? -eq 1 ]; then
-	if [ $VERBOSE -eq 0 ]; then
-		echo "CMake is not installed, please run dnf install cmake"
-	fi
-	exit
+if [ ! -f image-displayer ]; then
+    echo "Error : no exe found"
+    exit -1
 fi
 
-if [ $VERBOSE -eq 0 ]; then
-	echo "Building from CMakeLists.txt"
-fi
+export SDL_VIDEO_X11=0
+export SDL_VIDEODRIVER=x11
 
-cmake ..
-
-if [ $VERBOSE -eq 0 ]; then
-	echo "Building the project with cache"
-fi
-
-cmake --build .
-
-if [ $VERBOSE -eq 0 ]; then
-	echo "Finished !"
-fi
+./image-displayer
