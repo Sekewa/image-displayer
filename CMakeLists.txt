@@ -12,7 +12,8 @@ link_directories(${SDL2_LIBRARY_DIRS})
 
 set(SOURCES 
     src/main.c 
-    tools/reader.c)
+    tools/reader.c
+    tools/window.c)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 

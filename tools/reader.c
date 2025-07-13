@@ -16,15 +16,8 @@ BMP_FILE* getFile(char* fileName){
     file->magicNumber[0] = fgetc(file->fileptr);
     file->magicNumber[1] = fgetc(file->fileptr);
 
-    char* sizeFile = malloc(sizeof(char) * 4);
-
-    file->fileSize += fgetc(file->fileptr);
-    file->fileSize += fgetc(file->fileptr);
-    file->fileSize += fgetc(file->fileptr);
-    file->fileSize += fgetc(file->fileptr);
-
     // move to the start of BMP data
-    fseek(file->fileptr,4,SEEK_CUR);
+    fseek(file->fileptr,10,SEEK_SET);
 
     file->offset += fgetc(file->fileptr);
     file->offset += fgetc(file->fileptr);
@@ -32,6 +25,18 @@ BMP_FILE* getFile(char* fileName){
     file->offset += fgetc(file->fileptr);
 
     //fprintf(stdout,"Start Addr : %x\n",file->offset);
+
+    fseek(file->fileptr,18,SEEK_SET);
+
+    file->width += fgetc(file->fileptr);
+    file->width  += fgetc(file->fileptr);
+    file->width  += fgetc(file->fileptr);
+    file->width  += fgetc(file->fileptr);
+
+    file->height += fgetc(file->fileptr);
+    file->height += fgetc(file->fileptr);
+    file->height += fgetc(file->fileptr);
+    file->height += fgetc(file->fileptr);
 
     // moving to the start of data, once there the cursor is set to use data
     fseek(file->fileptr,file->offset,SEEK_SET);
