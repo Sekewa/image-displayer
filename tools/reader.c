@@ -1,5 +1,6 @@
 #include "../includes/reader.h"
 
+
 BMP_FILE* getFile(char* fileName){
     FILE* fileptr = NULL;
 
@@ -42,4 +43,50 @@ BMP_FILE* getFile(char* fileName){
     fseek(file->fileptr,file->offset,SEEK_SET);
 
     return file;
+}
+
+DIR* CheckIfImageDir() {
+    DIR* dir = opendir("image");
+
+    if(dir) {
+        fprintf(stdout, "dir exists\n");
+
+        struct dirent* de = NULL;
+
+        while(( de = readdir(dir)) != NULL) {
+            int isBefore = strcmp(trimwhitespace(de->d_name),"..");
+            int isCurrent = strcmp(trimwhitespace(de->d_name),".");
+
+            if(isBefore != 0 || isCurrent != 0)
+                fprintf(stdout,"%-16s",de->d_name);
+        }
+
+        return dir;
+    }else if (ENOENT == errno) {
+        fprintf(stderr,"no dir found\n");
+        return NULL;
+    }else {
+        fprintf(stderr,"opendir failed, closing app\n");
+        exit(-1);
+    }
+}
+
+char *trimwhitespace(char *str)
+{
+  char *end;
+
+  // Trim leading space
+  while(isspace((unsigned char)*str)) str++;
+
+  if(*str == 0)  // All spaces?
+    return str;
+
+  // Trim trailing space
+  end = str + strlen(str) - 1;
+  while(end > str && isspace((unsigned char)*end)) end--;
+
+  // Write new null terminator character
+  end[1] = '\0';
+
+  return str;
 }
